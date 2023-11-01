@@ -11,9 +11,15 @@
         <nav>
             <ul>
                 <li><a href="{% url 'home' %}">Главная</a></li>
-                <li><a href="">Авторизация</a></li>
-                <li><a href="{% url 'registration' %}">Регистрация</a></li>
-
+                {% if user.is_authenticated %}
+                    <p>Ваш никнейм:{{ user.username }}!</p>
+                    <a href="{% url 'dashboard' %}">Личный кабинет</a>
+                    <br>
+                    <a href="{% url 'logout' %}">Выйти из аккаунта</a>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Авторизация</a></li>
+                    <li><a href="{% url 'registration' %}">Регистрация</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
@@ -25,7 +31,6 @@
     </main>
 
     <footer>
-
         <p>&copy; 2023 Design.pro. Все права защищены.</p>
     </footer>
 </body>
