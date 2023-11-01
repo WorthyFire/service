@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Design.pro{% endblock %}</title>
+
+</head>
+<body>
+    <header>
+        <h1>Дизайн-студия "Design.pro"</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Главная</a></li>
+                <li><a href="{% url 'registration' %}">Регистрация</a></li>
+
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+
+        {% endblock %}
+    </main>
+
+    <footer>
+
+        <p>&copy; 2023 Design.pro. Все права защищены.</p>
+    </footer>
+</body>
+</html>
