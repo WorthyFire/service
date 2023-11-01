@@ -1,5 +1,4 @@
-
-
+from django.core.management.commands.runserver import Command as runserver
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -113,5 +112,5 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-from django.core.management.commands.runserver import Command as runserver
+
 runserver.default_port = "8080"
