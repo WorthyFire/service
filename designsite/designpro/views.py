@@ -3,9 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm
+from .forms import RegistrationForm, DesignRequestForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login
+
 def home(request):
     return render(request, 'home.html')
 
@@ -49,5 +50,15 @@ def login_view(request):
 @login_required
 def dashboard(request):
     user = User.objects.get(username=request.user.username)
-    # Здесь вы можете отображать информацию о заявках и другие данные для пользователя
     return render(request, 'autorized/dashboard.html')
+
+def create_design_request(request):
+    if request.method == 'POST':
+        form = DesignRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            design_request = form.save()
+            return redirect('autorized/dashboard')
+    else:
+        form = DesignRequestForm()
+
+    return render(request, 'autorized/create_request.html', {'form': form})

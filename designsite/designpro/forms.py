@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import re
+from .models import DesignRequest
+
 
 class RegistrationForm(forms.Form):
     full_name = forms.CharField(label='ФИО', max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'Ваше ФИО'}))
@@ -13,7 +15,7 @@ class RegistrationForm(forms.Form):
 
     def clean_full_name(self):
         full_name = self.cleaned_data['full_name']
-        if not re.match(r'^[а-яА-Я\s-]+$', full_name):
+        if not re.match(r'^[а-яёА-ЯЁ\s-]+$', full_name):
             raise ValidationError("ФИО может содержать только кириллические буквы, дефис и пробелы.")
         return full_name
 
@@ -31,3 +33,8 @@ class RegistrationForm(forms.Form):
         if password != password_confirm:
             raise ValidationError("Пароли не совпадают.")
         return password_confirm
+
+class DesignRequestForm(forms.ModelForm):
+    class Meta:
+        model = DesignRequest
+        fields = ['title', 'description', 'category', 'room_image']
