@@ -9,4 +9,5 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('create_design_request/', views.create_design_request, name='create_design_request'),
+    path('my_design_requests/', views.my_design_requests, name='my_design_requests'),
 ]

@@ -10,7 +10,7 @@
         <h1>Дизайн-студия "Design.pro"</h1>
         <nav>
             <ul>
-                <li><a href="{% url 'home' %}">Главная</a></li>
+                <a href="{% url 'home' %}">Главная</a>
                 {% if user.is_authenticated %}
                     <p>Ваш никнейм:{{ user.username }}!</p>
                     <a href="{% url 'dashboard' %}">Личный кабинет</a>
