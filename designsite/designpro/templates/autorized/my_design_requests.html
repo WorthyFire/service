@@ -1,31 +1,12 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <form method="get">
-    {{ status_filter_form.as_p }}
-</form>
-
-<table>
-    <thead>
-        <tr>
-            <th>Временная метка</th>
-            <th>Название заявки</th>
-            <th>Описание заявки</th>
-            <th>Категория заявки</th>
-            <th>Статус заявки</th>
-        </tr>
-    </thead>
-    <tbody>
+    <h2>Мои заявки</h2>
+    <ul>
         {% for request in my_requests %}
-            <tr>
-                <td>{{ request.created_at }}</td>
-                <td>{{ request.title }}</td>
-                <td>{{ request.description }}</td>
-                <td>{{ request.category }}</td>
-                <td>{{ request.status }}</td>
-            </tr>
+            <li>
+                <a href="{% url 'request_detail' request.pk %}">{{ request.title }}</a>
+            </li>
         {% endfor %}
-    </tbody>
-</table>
-
+    </ul>
 {% endblock %}

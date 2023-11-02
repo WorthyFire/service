@@ -1,0 +1,18 @@
+<h2>Детали заявки</h2>
+<p>Временная метка: {{ request.created_at }}</p>
+<p>Название заявки: {{ request.title }}</p>
+<p>Описание заявки: {{ request.description }}</p>
+<p>Категория заявки: {{ request.category }}</p>
+<p>Статус заявки: {{ request.status }} </p>
+
+{% if request.user == request.user %}
+    <form method="post" action="{% url 'delete_request' request.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Удалить заявку</button>
+    </form>
+{% endif %}
+
+    <br>
+    <a href="{% url 'my_design_requests' %}">Список моих заявок</a>
+    <br>
+    <a href = "{% url 'dashboard' %}">Вернуться в личный кабинет</a>

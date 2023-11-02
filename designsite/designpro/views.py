@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.http import Http404
+from django.shortcuts import  get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm, DesignRequestForm
@@ -26,8 +27,8 @@ def registration(request):
             user.first_name = full_name
             user.save()
 
-            custom_user = CustomUser(user=user, full_name=full_name)
-            custom_user.save()
+            # Создаем объект CustomUser и связываем его с пользователем
+            custom_user, created = CustomUser.objects.get_or_create(user=user, defaults={'full_name': full_name})
 
             login(request, user)
             return redirect('home')
@@ -73,16 +74,50 @@ def create_design_request(request):
     return render(request, 'autorized/create_request.html', {'form': form})
 
 def my_design_requests(request):
-    # Получить CustomUser для текущего пользователя
-    custom_user = CustomUser.get_custom_user(request.user)
 
-    if custom_user:
-        # Извлечь заявки для CustomUser
-        my_requests = DesignRequest.objects.filter(user=custom_user)
-    else:
-        my_requests = []
+    my_requests = DesignRequest.objects.filter(user=request.user.customuser)
 
-    return render(request, 'autorized/my_design_requests.html', {'my_requests': my_requests})
+    context = {
+        'my_requests': my_requests,
+    }
+
+    return render(request, 'autorized/my_design_requests.html', context)
+
+def request_detail(request, request_id):
+    design_request = get_object_or_404(DesignRequest, pk=request_id)
+
+    context = {
+        'request': design_request,
+    }
+
+    return render(request, 'autorized/request_detail.html', context)
+
+@login_required
+def delete_design_request(request, request_id):
+    # Получаем заявку
+    design_request = get_object_or_404(DesignRequest, pk=request_id)
+
+    # Проверяем, что текущий пользователь - автор заявки
+    if design_request.user.user != request.user:
+        raise Http404("Вы не можете удалить эту заявку.")
+
+    # Удаляем заявку
+    design_request.delete()
+
+    return redirect('my_design_requests')
+
+def delete_request(request, pk):
+    design_request = DesignRequest.objects.get(pk=pk)
+    design_request.delete()
+    return redirect('my_design_requests')
+
+
+
+
+
+
+
+
 
 
 
