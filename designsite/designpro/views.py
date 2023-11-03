@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.shortcuts import  get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
@@ -7,12 +7,20 @@ from django.shortcuts import render, redirect
 from .forms import RegistrationForm, DesignRequestForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login
-
-from .models import CustomUser, DesignRequest
+from .models import CustomUser
+from .models import DesignRequest
 
 
 def home(request):
-    return render(request, 'home.html')
+    completed_requests = DesignRequest.objects.filter(status='Выполнено').order_by('-created_at')[:4]
+    in_progress_count = DesignRequest.objects.filter(status='Принято в работу').count()
+
+    context = {
+        'completed_requests': completed_requests,
+        'in_progress_count': in_progress_count,
+    }
+
+    return render(request, 'home.html', context)
 
 
 def registration(request):

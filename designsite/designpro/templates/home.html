@@ -2,4 +2,18 @@
 
 {% block content %}
     <h1>Добро пожаловать на главную страницу</h1>
+
+    <h2>Последние 4 выполненные заявки:</h2>
+    <ul>
+        {% for request in completed_requests %}
+            <li>
+                <span>Временная метка: {{ request.created_at }}</span><br>
+                <span>Название: {{ request.title }}</span><br>
+                <span>Категория: {{ request.category.name }}</span><br>
+                <img src="{{ request.room_image.url }}" alt="{{ request.title }}" width="300" height="200">
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Количество заявок в статусе "Принято в работу": {{ in_progress_count }}</h2>
 {% endblock %}

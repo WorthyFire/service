@@ -1,3 +1,5 @@
+import os
+
 from django.core.management.commands.runserver import Command as runserver
 from pathlib import Path
 
@@ -15,6 +17,10 @@ SECRET_KEY = 'django-insecure-3!n6#l6+mhcxpf0nsz*zaas3=)3rw%i1k&qy1x(zz*83-bif(7
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Application definition
@@ -111,7 +117,6 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 runserver.default_port = "8080"
 
