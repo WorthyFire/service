@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import re
+from django.utils.translation import gettext_lazy as _
 from .models import DesignRequest
 
 
@@ -34,7 +35,19 @@ class RegistrationForm(forms.Form):
             raise ValidationError("Пароли не совпадают.")
         return password_confirm
 
+
 class DesignRequestForm(forms.ModelForm):
     class Meta:
         model = DesignRequest
         fields = ['title', 'description', 'category', 'room_image']
+
+    def clean_room_image(self):
+        max_file_size_bytes = 2 * 1024 * 1024  # 2 Мб в байтах
+        room_image = self.cleaned_data.get('room_image')
+
+        if room_image and room_image.size > max_file_size_bytes:
+            max_file_size_mb = max_file_size_bytes / (1024 * 1024)  # Конвертация в мегабайты
+            raise forms.ValidationError(
+                _('Максимальный размер файла: %(max_size)s МБ.') % {'max_size': max_file_size_mb}, code='file_size')
+
+        return room_image
