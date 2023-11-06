@@ -42,7 +42,7 @@ class DesignRequestForm(forms.ModelForm):
         fields = ['title', 'description', 'category', 'room_image']
 
     def clean_room_image(self):
-        max_file_size_bytes = 2 * 1024 * 1024  # 2 Мб в байтах
+        max_file_size_bytes = 2 * 1024 * 1024
         room_image = self.cleaned_data.get('room_image')
 
         if room_image and room_image.size > max_file_size_bytes:
@@ -51,3 +51,13 @@ class DesignRequestForm(forms.ModelForm):
                 _('Максимальный размер файла: %(max_size)s МБ.') % {'max_size': max_file_size_mb}, code='file_size')
 
         return room_image
+
+class DesignRequestFilterForm(forms.Form):
+    STATUS_CHOICES = (
+        ('', 'Все'),
+        ('Новая', 'Новая'),
+        ('Принято в работу', 'Принято в работу'),
+        ('Выполнено', 'Выполнено'),
+    )
+
+    status = forms.ChoiceField(label='Статус заявки', choices=STATUS_CHOICES, required=False)

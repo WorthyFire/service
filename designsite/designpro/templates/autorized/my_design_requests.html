@@ -2,6 +2,10 @@
 
 {% block content %}
     <h2>Мои заявки</h2>
+    <form method="get">
+        {{ filter_form.as_p }}
+        <input type="submit" value="Применить фильтр">
+    </form>
     <ul>
         {% for request in my_requests %}
             <li>
