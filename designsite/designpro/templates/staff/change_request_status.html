@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h2>Изменить статус заявки:</h2>
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="status">Новый статус:</label>
+    <select name="status" id="status">
+        <option value="Принято в работу">Принято в работу</option>
+        <option value="Выполнено">Выполнено</option>
+    </select>
+        <br>
+    <button type="submit">Сохранить</button>
+</form>
+    <br>
+    <a href="{% url 'request_detail' request.id %}">Вернуться к деталям заявки</a>
+</div>
+{% endblock %}

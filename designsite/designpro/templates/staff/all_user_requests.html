@@ -1,0 +1,30 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Список заявок пользователей</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Заголовок</th>
+                <th>Категория</th>
+                <th>Статус</th>
+                <th>Пользователь</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in user_requests %}
+                <tr>
+                    <td>{{ request.title }}</td>
+                    <td>{{ request.category }}</td>
+                    <td>{{ request.status }}</td>
+                    <td>{{ request.user.user }}</td>
+                    <td>
+                        <a href="{% url 'request_detail' request.id %}">Подробнее</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

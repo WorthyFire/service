@@ -1,18 +1,23 @@
-<h2>Детали заявки</h2>
-<p>Временная метка: {{ request.created_at }}</p>
-<p>Название заявки: {{ request.title }}</p>
-<p>Описание заявки: {{ request.description }}</p>
-<p>Категория заявки: {{ request.category }}</p>
-<p>Статус заявки: {{ request.status }} </p>
+{% extends "base_generic.html" %}
 
-{% if request.user == request.user %}
-    <form method="post" action="{% url 'delete_request' request.pk %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Удалить заявку</button>
-    </form>
-{% endif %}
-    <a href="{% url 'home' %}">На главную страницу</a>
+{% block content %}
+    <h1>Детали заявки</h1>
+    <h2><strong>Время создания:</strong> {{ request.created_at }}</h2>
+    <h2>Название заявки:{{ request.title }}</h2>
+    <p><strong>Описание:</strong> {{ request.description }}</p>
+    <p><strong>Категория:</strong> {{ request.category }}</p>
+    <p><strong>Статус:</strong> {{ request.status }}</p>
+    <p><strong>Пользователь:</strong> {{ request.user }}</p>
+
+     {% if user.is_staff%}
+    <a href="{% url 'change_request_status' request.id %}">Изменить статус заявки</a>
     <br>
-    <a href="{% url 'my_design_requests' %}">Список моих заявок</a>
+    <a href="{% url 'all_user_requests' %}">Вернуться к списку заявок пользователей</a>
+    {% else %}
+    <a href="{% url 'my_design_requests' %}">Вернуться к своим заявкам</a>
     <br>
-    <a href = "{% url 'dashboard' %}">Вернуться в личный кабинет</a>
+    <a href="{% url 'delete_request' request.id %}">Удалить заявку</a>
+    {% endif %}
+</div>
+{% endblock %}
+

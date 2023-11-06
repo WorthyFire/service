@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import re
 from django.utils.translation import gettext_lazy as _
-from .models import DesignRequest
+from .models import DesignRequest, DesignCategory
 
 
 class RegistrationForm(forms.Form):
@@ -35,6 +35,23 @@ class RegistrationForm(forms.Form):
             raise ValidationError("Пароли не совпадают.")
         return password_confirm
 
+class DesignCategoryForm(forms.ModelForm):
+    class Meta:
+        model = DesignCategory
+        fields = ['name']
+        labels = {
+            'name': 'Название категории'
+        }
+class DesignRequestFilterForm(forms.Form):
+    STATUS_CHOICES = (
+        ('', 'Все'),
+        ('Новая', 'Новая'),
+        ('Принято в работу', 'Принято в работу'),
+        ('Выполнено', 'Выполнено'),
+    )
+
+    status = forms.ChoiceField(label='Статус заявки', choices=STATUS_CHOICES, required=False)
+
 
 class DesignRequestForm(forms.ModelForm):
     class Meta:
@@ -51,13 +68,12 @@ class DesignRequestForm(forms.ModelForm):
                 _('Максимальный размер файла: %(max_size)s МБ.') % {'max_size': max_file_size_mb}, code='file_size')
 
         return room_image
-
-class DesignRequestFilterForm(forms.Form):
-    STATUS_CHOICES = (
-        ('', 'Все'),
+class ChangeRequestStatusForm(forms.Form):
+    STATUS_CHOICES = [
         ('Новая', 'Новая'),
         ('Принято в работу', 'Принято в работу'),
         ('Выполнено', 'Выполнено'),
-    )
+    ]
 
-    status = forms.ChoiceField(label='Статус заявки', choices=STATUS_CHOICES, required=False)
+    status = forms.ChoiceField(choices=STATUS_CHOICES, label='Статус')
+

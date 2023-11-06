@@ -1,7 +1,6 @@
-from django.contrib import admin
 from .models import *
+from django.contrib import admin
 
-# Register your models here.
 admin.site.register(CustomUser)
-admin.site.register(DesignCategory)
 admin.site.register(DesignRequest)
+admin.site.register(DesignCategory)

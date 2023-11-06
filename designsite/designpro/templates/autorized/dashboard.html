@@ -6,15 +6,19 @@
 </head>
 <body>
     <h1>Добро пожаловать в ваш личный кабинет</h1>
-    <a href="{% url 'create_design_request'%}">Создать новую заявку</a>
-    <br>
-    <a href="{% url 'my_design_requests' %}">Список моих заявок</a>
-    <br>
-    <a href="{% url 'home' %}">На главную страницу</a>
-    <br>
+
+    {% if not user.is_staff %}
+        <a href="{% url 'create_design_request'%}">Создать новую заявку</a><br>
+        <a href="{% url 'my_design_requests' %}">Список моих заявок</a><br>
+    {% else %}
+        <a href="{% url 'all_user_requests' %}">Все заявки пользователей</a><br>
+        <a href="{% url 'manage_categories' %}">Управление категориями заявок</a><br>
+    {% endif %}
+
+    <a href="{% url 'home' %}">На главную страницу</a><br>
     <p>Ваш никнейм: {{ user.username }}</p>
     <a href="{% url 'logout' %}">Выйти из аккаунта</a>
 
-<p>&copy; 2023 Design.pro. Все права защищены.</p>
+    <p>&copy; 2023 Design.pro. Все права защищены.</p>
 </body>
 </html>

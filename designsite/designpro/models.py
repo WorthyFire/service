@@ -23,6 +23,10 @@ class DesignCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+
+from django.db import models
+
 class DesignRequest(models.Model):
     title = models.CharField(max_length=100, verbose_name='Заголовок')
     description = models.TextField(verbose_name='Описание')
@@ -33,9 +37,14 @@ class DesignRequest(models.Model):
         verbose_name='Фото помещения или план'
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    STATUS_CHOICES = [
+        ('Новая', 'Новая'),
+        ('Принято в работу', 'Принято в работу'),
+        ('Выполнено', 'Выполнено'),
+    ]
     status = models.CharField(max_length=20, default="Новая", verbose_name='Статус')
+    current_status = models.CharField(max_length=20, default="Новая", verbose_name='Текущий статус')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь')
-
     def get_absolute_url(self):
         return reverse('request_detail', args=[str(self.id)])
 
@@ -43,3 +52,4 @@ class DesignRequest(models.Model):
         return reverse('delete_request', args=[str(self.id)])
     def __str__(self):
         return self.title
+

@@ -1,13 +1,15 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm, DesignRequestForm, DesignRequestFilterForm
+from .forms import RegistrationForm, DesignRequestForm, DesignCategoryForm, DesignRequestFilterForm, \
+    ChangeRequestStatusForm
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.contrib.auth import login
-from .models import CustomUser
+from .models import CustomUser, DesignCategory
 from .models import DesignRequest
 
 
@@ -104,6 +106,7 @@ def request_detail(request, request_id):
 
     context = {
         'request': design_request,
+        'user': request.user,  # Добавляем пользователя в контекст
     }
 
     return render(request, 'autorized/request_detail.html', context)
@@ -122,9 +125,49 @@ def delete_request(request, pk):
 
     return redirect('my_design_requests')
 
+@user_passes_test(lambda u: u.is_staff)
+def all_user_requests(request):
+    user_requests = DesignRequest.objects.all()
+    return render(request, 'staff/all_user_requests.html', {'user_requests': user_requests})
+#Место для изменения статуса заявки
+def change_request_status(request, request_id):
+    if request.user.is_staff:
+        design_request = DesignRequest.objects.get(pk=request_id)
+        if design_request.status == 'Новая':
+            if request.method == 'POST':
+                form = ChangeRequestStatusForm(request.POST)
+                if form.is_valid():
+                    new_status = form.cleaned_data['status']
+                    design_request.status = new_status
+                    design_request.save()
+                    return redirect('request_detail', request_id)
+            else:
+                form = ChangeRequestStatusForm()
+            return render(request, 'staff/change_request_status.html', {'request': design_request, 'form': form})
+        else:
+            error_message = "У этой заявки нельзя изменить статус, так как её статус 'Принято в работу' или 'Выполнено'."
+            messages.error(request, error_message)
+            return redirect('request_detail', request_id)
+    else:
+        messages.error(request, 'У вас нет прав для изменения статуса заявки.')
+        return redirect('request_detail', request_id)
+###
+def manage_categories(request):
+    categories = DesignCategory.objects.all()
+    form = DesignCategoryForm()
 
+    if request.method == 'POST':
+        form = DesignCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_categories')
 
+    return render(request, 'staff/manage_categories.html', {'categories': categories, 'form': form})
 
+def delete_category(request, category_id):
+    category = DesignCategory.objects.get(pk=category_id)
+    category.delete()
+    return redirect('manage_categories')
 
 
 
