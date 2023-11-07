@@ -10,7 +10,11 @@
                 <span>Временная метка: {{ request.created_at }}</span><br>
                 <span>Название: {{ request.title }}</span><br>
                 <span>Категория: {{ request.category.name }}</span><br>
-                <img src="{{ request.room_image.url }}" alt="{{ request.title }}" width="300" height="200">
+                {% if request.status == "Выполнено" and request.result_design_image %}
+                    <img src="{{ request.result_design_image.url }}" alt="{{ request.title }}" width="300" height="200">
+                {% else %}
+                    <img src="{{ request.room_image.url }}" alt="{{ request.title }}" width="300" height="200">
+                {% endif %}
             </li>
         {% endfor %}
     </ul>

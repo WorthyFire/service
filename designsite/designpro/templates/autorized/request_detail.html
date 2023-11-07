@@ -8,7 +8,12 @@
     <p><strong>Категория:</strong> {{ request.category }}</p>
     <p><strong>Статус:</strong> {{ request.status }}</p>
     <p><strong>Пользователь:</strong> {{ request.user }}</p>
-
+ {% if request.room_image %}
+        <h3>Текущее изображение заявки:</h3>
+        <img src="{{ request.room_image.url }}" alt="{{ request.title }}" width="300" height="200">
+    {% endif %}
+<br>
+<br>
      {% if user.is_staff%}
     <a href="{% url 'change_request_status' request.id %}">Изменить статус заявки</a>
     <br>

@@ -68,7 +68,12 @@ class DesignRequestForm(forms.ModelForm):
                 _('Максимальный размер файла: %(max_size)s МБ.') % {'max_size': max_file_size_mb}, code='file_size')
 
         return room_image
-class ChangeRequestStatusForm(forms.Form):
+
+class ChangeRequestStatusForm(forms.ModelForm):
+    class Meta:
+        model = DesignRequest
+        fields = ['status', 'comment', 'design_image']
+
     STATUS_CHOICES = [
         ('Новая', 'Новая'),
         ('Принято в работу', 'Принято в работу'),
@@ -76,4 +81,29 @@ class ChangeRequestStatusForm(forms.Form):
     ]
 
     status = forms.ChoiceField(choices=STATUS_CHOICES, label='Статус')
+    comment = forms.CharField(required=False, widget=forms.Textarea)
+    design_image = forms.ImageField(required=False)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Проверка статуса заявки и отключение редактирования статуса при необходимости
+        if self.instance.status != 'Новая':
+            self.fields['status'].widget.attrs['disabled'] = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+        status = cleaned_data.get('status')
+
+        if status == 'Принято в работу':
+
+            comment = cleaned_data.get('comment')
+            if not comment:
+                raise forms.ValidationError("Комментарий обязателен для статуса 'Принято в работу'.")
+
+        elif status == 'Выполнено':
+
+            design_image = cleaned_data.get('design_image')
+            if not design_image:
+                raise forms.ValidationError("Фотография дизайна обязательна для статуса 'Выполнено'.")
+
+        return cleaned_data

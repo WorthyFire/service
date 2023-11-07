@@ -36,6 +36,13 @@ class DesignRequest(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'bmp'])],
         verbose_name='Фото помещения или план'
     )
+    result_design_image = models.ImageField(
+        upload_to='result_design_images/',
+        null=True,
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'bmp'])],
+        verbose_name='Фото итогового дизайна'
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     STATUS_CHOICES = [
         ('Новая', 'Новая'),
@@ -43,7 +50,6 @@ class DesignRequest(models.Model):
         ('Выполнено', 'Выполнено'),
     ]
     status = models.CharField(max_length=20, default="Новая", verbose_name='Статус')
-    current_status = models.CharField(max_length=20, default="Новая", verbose_name='Текущий статус')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь')
     def get_absolute_url(self):
         return reverse('request_detail', args=[str(self.id)])

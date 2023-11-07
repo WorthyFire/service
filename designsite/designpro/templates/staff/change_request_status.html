@@ -1,15 +1,28 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h2>Изменить статус заявки:</h2>
-    <form method="post" enctype="multipart/form-data">
+    <h2>Изменение статуса новой заявки:</h2>
+    <h3>Название заявки:{{ request.title }}</h3>
+   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <label for="status">Новый статус:</label>
+    <label for="status">Выберите статус на которой изменить:</label>
     <select name="status" id="status">
         <option value="Принято в работу">Принято в работу</option>
         <option value="Выполнено">Выполнено</option>
     </select>
-        <br>
+    <br>
+    <label for="comment">Комментарий:</label>
+    <textarea name="comment" id="comment"></textarea>
+    {% for error in form.comment.errors %}
+        <p class="error">{{ error }}</p>
+    {% endfor %}
+    <br>
+    <label for="design_image">Изображение дизайна:</label>
+    <input type="file" name="design_image" id="design_image">
+    {% for error in form.design_image.errors %}
+        <p class="error">{{ error }}</p>
+    {% endfor %}
+    <br>
     <button type="submit">Сохранить</button>
 </form>
     <br>

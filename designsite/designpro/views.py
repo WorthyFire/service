@@ -106,7 +106,7 @@ def request_detail(request, request_id):
 
     context = {
         'request': design_request,
-        'user': request.user,  # Добавляем пользователя в контекст
+        'user': request.user,
     }
 
     return render(request, 'autorized/request_detail.html', context)
@@ -133,21 +133,30 @@ def all_user_requests(request):
 def change_request_status(request, request_id):
     if request.user.is_staff:
         design_request = DesignRequest.objects.get(pk=request_id)
-        if design_request.status == 'Новая':
-            if request.method == 'POST':
-                form = ChangeRequestStatusForm(request.POST)
-                if form.is_valid():
-                    new_status = form.cleaned_data['status']
-                    design_request.status = new_status
-                    design_request.save()
-                    return redirect('request_detail', request_id)
-            else:
-                form = ChangeRequestStatusForm()
-            return render(request, 'staff/change_request_status.html', {'request': design_request, 'form': form})
-        else:
+
+        if design_request.status not in ['Новая']:
             error_message = "У этой заявки нельзя изменить статус, так как её статус 'Принято в работу' или 'Выполнено'."
-            messages.error(request, error_message)
-            return redirect('request_detail', request_id)
+            raise Http404(error_message)
+
+        if request.method == 'POST':
+            form = ChangeRequestStatusForm(request.POST, request.FILES)
+            if form.is_valid():
+                new_status = form.cleaned_data['status']
+
+                if new_status == 'Выполнено':
+                    design_request.result_design_image = form.cleaned_data['design_image']
+                elif new_status == 'Принято в работу':
+                    design_request.comment = form.cleaned_data['comment']
+
+                design_request.status = new_status
+                design_request.save()
+
+                return redirect('request_detail', request_id)
+
+        else:
+            form = ChangeRequestStatusForm(instance=design_request)
+
+        return render(request, 'staff/change_request_status.html', {'request': design_request, 'form': form})
     else:
         messages.error(request, 'У вас нет прав для изменения статуса заявки.')
         return redirect('request_detail', request_id)
