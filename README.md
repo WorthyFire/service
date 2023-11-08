@@ -1,8 +1,19 @@
-# service
-Сначала нужно клонировать репозиторий <br>
-Запустить репозиторий в Pycharm <br>
-Сделать миграции, если они вдруг отсутствуют <br>
-При запуске Портал должен быть доступен по адресу: http://localhost:8080/ <br>
-Административная панель должна быть доступна по адресу: http://localhost:8080/superadmin <br>
-Логин админки: admin <br>
-Пароль от админки: admin
+# Реалиазция проекта для Дизайн-студии Design pro <br>
+1. Клонируйте репозиторий: <br>
+git clone https://github.com/WorthyFire/service.git <br>
+2. Перейдите в директорию проекта: <br>
+cd designsite <br>
+3. Установите пакеты: <br>
+   pip install django <br>
+   pip install Pillow <br>
+# Запуск <br>
+Запустите сервер: <br>
+python manage.py runserver <br>
+
+Вход в панель администратора осуществлять по адресу: <br>
+    http://localhost:8080/superadmin/
+    Логин: admin
+    Пароль: admin
+
+# Автор: <br>
+Выполнил Кулешков Алексей Игоревич группа 421
