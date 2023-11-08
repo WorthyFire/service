@@ -1,4 +1,4 @@
 # service
-Открыть не main а master
-Там открыть README 
+Открыть не main а master <br>
+Там открыть README <br>
 Там написана информация по запуску проекта
